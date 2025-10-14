@@ -1,0 +1,55 @@
+/* Define color variables for the default (light) theme */
+:root {
+  --primary-bg: #f4f7f9;
+  --secondary-bg: #ffffff;
+  --card-bg: #ffffff;
+  --text-color: #1a202c;
+  --text-muted: #718096;
+  --accent-color: #007bff;
+  --accent-hover: #0056b3;
+  --border-color: #e2e8f0;
+  --danger-color: #d32f2f;
+  --shadow-color: rgba(0, 0, 0, 0.08);
+}
+
+/* Define override variables for the dark theme */
+body[data-theme="dark"] {
+  --primary-bg: #121212;
+  --secondary-bg: #1a1a1a;
+  --card-bg: #242424;
+  --text-color: #e2e2e2;
+  --text-muted: #a0a0a0;
+  --accent-color: #facc15; /* Yellow accent for dark mode */
+  --accent-hover: #eab308;
+  --border-color: #333333;
+  --danger-color: #ef5350;
+  --shadow-color: rgba(0, 0, 0, 0.2);
+}
+
+/* Basic styles */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "Segoe UI", Arial, sans-serif;
+  background-color: var(--primary-bg); /* Use variable */
+  color: var(--text-color); /* Use variable */
+  line-height: 1.6;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+a {
+  color: var(--accent-color);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+button {
+  font-family: inherit;
+}
