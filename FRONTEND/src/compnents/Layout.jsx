@@ -1,12 +1,17 @@
-import React, { useState } from "react";
-import { Link, Outlet } from "react-router-dom";
+import React from "react"; // <-- No longer need useState
+import { Link, Outlet, useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext"; // <-- 1. IMPORT useAuth
 
-// This component provides the consistent Header and Footer for all pages.
 export const Layout = () => {
-  // --- FAKE LOGIN STATE ---
-  // In a real app, this would come from your authentication context.
-  // Change `false` to `true` to see the "Profile" button appear!
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
+  // --- 2. USE THE REAL AUTH STATE ---
+  // This replaces 'const [isLoggedIn, setIsLoggedIn] = useState(true);'
+  const { isLoggedIn, logout } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate("/login"); // Redirect to login page after logout
+  };
 
   return (
     <div className="min-h-screen bg-black text-white font-sans">
@@ -22,6 +27,7 @@ export const Layout = () => {
             </h1>
           </Link>
 
+          {/* ... (Main navigation links remain unchanged) ... */}
           <nav className="hidden md:flex items-center space-x-8">
             <Link
               to="/"
@@ -55,13 +61,10 @@ export const Layout = () => {
             </Link>
           </nav>
 
-          {/* --- THIS IS THE UPDATED SECTION --- */}
+          {/* --- 3. THIS SECTION NOW USES THE REAL 'isLoggedIn' --- */}
           <div className="flex items-center space-x-4">
             {isLoggedIn ? (
               <>
-                {" "}
-                {/* <-- Added Fragment */}
-                {/* --- THIS IS YOUR NEW DASHBOARD LINK --- */}
                 <Link
                   to="/lawyer/dashboard"
                   className="hidden md:flex items-center gap-2 px-4 py-2 bg-gray-700 text-white font-semibold rounded hover:bg-gray-600 transition-colors duration-200"
@@ -69,7 +72,6 @@ export const Layout = () => {
                   <span className="material-symbols-outlined">dashboard</span>
                   Dashboard
                 </Link>
-                {/* --- THIS IS YOUR EXISTING PROFILE BUTTON --- */}
                 <Link
                   to="/profile"
                   className="hidden md:flex items-center gap-2 px-4 py-2 bg-yellow-500 text-black font-semibold rounded hover:bg-yellow-400 transition-colors duration-200"
@@ -81,7 +83,6 @@ export const Layout = () => {
                 </Link>
               </>
             ) : (
-              // If the user is NOT logged in, show the Login button
               <Link
                 to="/login"
                 className="hidden md:block px-5 py-2 bg-yellow-500 text-black font-semibold rounded hover:bg-yellow-400 transition-colors duration-200"
@@ -89,12 +90,10 @@ export const Layout = () => {
                 Login / Consult
               </Link>
             )}
-            {/* The mobile menu would also need similar logic */}
             <details className="relative md:hidden">
               {/* ... mobile menu content ... */}
             </details>
           </div>
-          {/* --- END OF UPDATED SECTION --- */}
         </div>
       </header>
 

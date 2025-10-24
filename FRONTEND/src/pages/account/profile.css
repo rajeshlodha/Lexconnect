@@ -1,11 +1,13 @@
+/* --- src/pages/account/profile.css --- */
+
 /* --- Main Profile Page Layout --- */
 .profile-page-container {
   display: flex;
   max-width: 1200px;
   margin: 40px auto;
-  gap: 32px;
+  gap: 40px; /* Increased gap */
   padding: 0 24px;
-  min-height: calc(100vh - 200px);
+  min-height: calc(100vh - 200px); /* Adjust based on header/footer */
 }
 
 .profile-sidebar {
@@ -17,6 +19,7 @@
   display: flex;
   flex-direction: column;
   border: 1px solid var(--border-color);
+  box-shadow: 0 4px 12px var(--shadow-color); /* Added subtle shadow */
 }
 
 .profile-content {
@@ -29,6 +32,10 @@
   padding-bottom: 24px;
   margin-bottom: 24px;
   border-bottom: 1px solid var(--border-color);
+  /* Added flex for better vertical centering if needed */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .profile-avatar-img {
@@ -52,6 +59,10 @@
   color: var(--text-muted);
 }
 
+.profile-nav {
+  margin-bottom: 24px; /* Added margin below nav */
+}
+
 .profile-nav button {
   display: flex;
   align-items: center;
@@ -66,6 +77,11 @@
   text-align: left;
   cursor: pointer;
   transition: background-color 0.2s, color 0.2s;
+  margin-bottom: 4px; /* Added small gap between buttons */
+}
+
+.profile-nav button:last-child {
+  margin-bottom: 0;
 }
 
 .profile-nav button:hover {
@@ -75,12 +91,14 @@
 
 .profile-nav button.active {
   background-color: var(--accent-color);
-  color: #fff;
-  font-weight: 500;
+  /* Adjust text color for better contrast based on accent color */
+  color: #111; /* Assuming dark text for yellow accent */
+  font-weight: 600; /* Slightly bolder */
 }
 
 .profile-nav button.active .material-symbols-outlined {
-  color: #fff;
+  /* Adjust icon color for better contrast */
+  color: #111;
 }
 
 /* --- Content Cards & Forms --- */
@@ -90,17 +108,24 @@
   border-radius: 12px;
   border: 1px solid var(--border-color);
   box-shadow: 0 4px 12px var(--shadow-color);
+  margin-bottom: 32px; /* Added margin between stacked cards if needed */
+}
+
+.profile-card:last-child {
+  margin-bottom: 0;
 }
 
 .card-title {
   font-size: 1.5rem;
   font-weight: 600;
-  margin-bottom: 24px;
+  margin-bottom: 28px; /* Increased margin */
   color: var(--text-color);
+  padding-bottom: 12px; /* Added padding below title */
+  border-bottom: 1px solid var(--border-color); /* Added separator */
 }
 
 .form-group {
-  margin-bottom: 20px;
+  margin-bottom: 24px; /* Increased spacing */
 }
 
 .form-group label {
@@ -112,55 +137,64 @@
 }
 
 .form-group input,
+.form-group textarea, /* Added textarea */
 .profile-select {
   width: 100%;
-  padding: 10px 12px;
+  padding: 12px 14px; /* Slightly more padding */
   border: 1px solid var(--border-color);
   border-radius: 6px;
-  background-color: var(--primary-bg);
+  background-color: var(--secondary-bg); /* Use secondary for inputs */
   color: var(--text-color);
   font-size: 1rem;
-  transition: border-color 0.2s;
+  transition: border-color 0.2s, box-shadow 0.2s; /* Added box-shadow transition */
+  font-family: inherit; /* Ensure font consistency */
+}
+
+/* Added textarea styles */
+.form-group textarea {
+  resize: vertical;
+  min-height: 100px;
 }
 
 .form-group input:focus,
+.form-group textarea:focus, /* Added textarea focus */
 .profile-select:focus {
   outline: none;
   border-color: var(--accent-color);
+  box-shadow: 0 0 0 2px var(--accent-color-translucent, rgba(250, 204, 21, 0.3)); /* Added focus ring */
 }
 
 .form-group input:disabled {
-  background-color: #e9ecef;
+  background-color: var(--primary-bg); /* Match background */
   cursor: not-allowed;
-  opacity: 0.7;
+  opacity: 0.6;
 }
 
-/* --- THIS IS THE UPDATED BUTTON STYLE --- */
+/* --- Button Styles --- */
 .profile-button {
   display: inline-block;
-  /* CHANGE: Reduced padding for a more compact look */
-  padding: 8px 18px;
+  padding: 10px 20px; /* Adjusted padding */
   background-color: var(--secondary-bg);
   color: var(--text-color);
   border: 1px solid var(--border-color);
   border-radius: 6px;
-  /* CHANGE: Slightly smaller font size */
   font-size: 0.95rem;
-  font-weight: 500;
+  font-weight: 600; /* Slightly bolder */
   cursor: pointer;
-  transition: background-color 0.2s, border-color 0.2s;
+  transition: background-color 0.2s, border-color 0.2s, color 0.2s;
   text-align: center;
-  margin-top: 16px;
+  margin-top: 8px; /* Reduced default top margin */
 }
 
 .profile-button:hover {
   border-color: var(--accent-color);
+  background-color: var(--primary-bg);
 }
 
 .profile-button.primary {
   background-color: var(--accent-color);
   border-color: var(--accent-color);
-  color: #fff; /* Using plain white for better contrast on accent */
+  color: #111; /* Dark text for yellow accent */
 }
 
 .profile-button.primary:hover {
@@ -168,19 +202,79 @@
   border-color: var(--accent-hover);
 }
 
+/* Specific button spacing */
+.profile-card form .profile-button.primary {
+  margin-top: 24px; /* Ensure Save button has adequate space */
+}
+.setting-item .profile-button {
+  margin-top: 12px; /* Smaller margin for inline buttons */
+}
+.billing-plan .profile-button {
+  margin-top: 12px;
+}
+
+/* --- Account Settings Specifics --- */
+.setting-item {
+  padding-top: 20px;
+  margin-top: 20px;
+  border-top: 1px solid var(--border-color);
+}
+.setting-item:first-of-type {
+  /* First one doesn't need top border/padding */
+  padding-top: 0;
+  margin-top: 0;
+  border-top: none;
+}
+.setting-item h4 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: var(--text-color);
+}
+.setting-item p {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  margin-bottom: 12px;
+}
+
+/* Password fields alignment */
+.form-group input[type="password"] {
+  margin-bottom: 12px;
+}
+.form-group input[type="password"]:last-of-type {
+  margin-bottom: 0;
+}
+
 /* --- Preferences Section --- */
 .preference-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 16px 0;
+  padding: 20px 0; /* Increased padding */
   border-bottom: 1px solid var(--border-color);
 }
 
 .preference-item:last-child {
   border-bottom: none;
+  padding-bottom: 0; /* Remove bottom padding on last item */
+}
+.preference-item h4 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 4px;
+  color: var(--text-color);
+}
+.preference-item p {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  margin: 0;
 }
 
+.theme-toggle-switch {
+  flex-shrink: 0; /* Prevent switch from shrinking */
+  margin-left: 16px; /* Space between text and switch */
+}
+/* ... (rest of switch styles) ... */
 .switch {
   position: relative;
   display: inline-block;
@@ -201,7 +295,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: #ccc;
+  background-color: var(--border-color); /* Use border color for off state */
   transition: 0.4s;
 }
 
@@ -236,9 +330,46 @@ input:checked + .slider:before {
   border-radius: 50%;
 }
 
+/* --- Billing & Support Sections (Minor tweaks) --- */
+.billing-plan,
+.billing-history {
+  margin-bottom: 24px;
+}
+.billing-plan:last-child,
+.billing-history:last-child {
+  margin-bottom: 0;
+}
+.billing-plan p,
+.billing-history p {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  margin-bottom: 4px;
+}
+.billing-plan h4,
+.billing-history h4 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--text-color);
+}
+.support-links {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 16px;
+}
+.support-links a {
+  color: var(--accent-color);
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 0.95rem;
+}
+.support-links a:hover {
+  text-decoration: underline;
+}
+
 /* --- Logout Button --- */
 .profile-logout-section {
-  margin-top: auto;
+  margin-top: auto; /* Pushes to bottom */
   padding-top: 16px;
   border-top: 1px solid var(--border-color);
 }
@@ -260,7 +391,10 @@ input:checked + .slider:before {
 }
 
 .logout-button:hover {
-  background-color: var(--danger-color);
+  background-color: var(--danger-color, #d32f2f); /* Use danger variable */
+  color: #fff;
+}
+.logout-button:hover .material-symbols-outlined {
   color: #fff;
 }
 
@@ -268,8 +402,27 @@ input:checked + .slider:before {
 @media (max-width: 992px) {
   .profile-page-container {
     flex-direction: column;
+    gap: 24px; /* Reduce gap on smaller screens */
   }
   .profile-sidebar {
     width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .profile-card {
+    padding: 24px; /* Reduce padding on mobile */
+  }
+  .card-title {
+    font-size: 1.3rem;
+  }
+  .preference-item {
+    flex-direction: column; /* Stack preference items */
+    align-items: flex-start;
+    gap: 12px;
+  }
+  .theme-toggle-switch {
+    margin-left: 0;
+    margin-top: 8px;
   }
 }

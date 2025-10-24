@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useTheme } from "../../context/ThemeContext"; // Import the useTheme hook
+import { useTheme } from "../../context/ThemeContext";
+import { useAuth } from "../../context/AuthContext"; // <-- 1. IMPORT useAuth
 import "./Profile.css";
 
-// --- Sub-component for Personal Info ---
+// --- Sub-component for Personal Info (Unchanged) ---
 const PersonalInfo = ({ user }) => {
   const [formData, setFormData] = useState({
     name: user.name || "",
@@ -74,7 +75,7 @@ const PersonalInfo = ({ user }) => {
   );
 };
 
-// --- Sub-component for Account Settings ---
+// --- Sub-component for Account Settings (Unchanged) ---
 const AccountSettings = () => (
   <div className="profile-card">
     <h3 className="card-title">Account Settings</h3>
@@ -92,7 +93,7 @@ const AccountSettings = () => (
   </div>
 );
 
-// --- Sub-component for Preferences with functional theme toggle ---
+// --- Sub-component for Preferences (Unchanged) ---
 const Preferences = () => {
   const { theme, toggleTheme } = useTheme();
 
@@ -129,7 +130,7 @@ const Preferences = () => {
   );
 };
 
-// --- Sub-component for Billing ---
+// --- Sub-component for Billing (Unchanged) ---
 const BillingInfo = ({ plan }) => (
   <div className="profile-card">
     <h3 className="card-title">Billing & Subscription</h3>
@@ -145,7 +146,7 @@ const BillingInfo = ({ plan }) => (
   </div>
 );
 
-// --- Sub-component for Support ---
+// --- Sub-component for Support (Unchanged) ---
 const Support = () => (
   <div className="profile-card">
     <h3 className="card-title">Support & Help</h3>
@@ -162,6 +163,7 @@ const Support = () => (
 export const ProfilePage = () => {
   const [activeTab, setActiveTab] = useState("personal");
   const navigate = useNavigate();
+  const { logout } = useAuth(); // <-- 2. GET THE logout FUNCTION
 
   const userData = {
     name: "Jessica Miller",
@@ -169,11 +171,13 @@ export const ProfilePage = () => {
     email: "j.miller@example.com",
     phone: "+1 (555) 123-4567",
     avatar:
-      "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=776&q=80",
+      "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%D%D&auto=format&fit=crop&w=776&q=80",
     plan: "Premium Legal Suite",
   };
 
+  // --- THIS FUNCTION IS NOW UPDATED ---
   const handleLogout = () => {
+    logout(); // <-- 3. CALL logout() TO CLEAR THE SESSION
     navigate("/login");
   };
 

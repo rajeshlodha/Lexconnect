@@ -1,6 +1,12 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import "./Login.css"; // We will be replacing the content of this file next
+import "./Login.css";
+import { useAuth } from "../../context/AuthContext";
+
+// Simple email validation function (can be shared or defined locally)
+const isValidEmail = (email) => {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+};
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -8,19 +14,41 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  const { login } = useAuth();
+
+  // --- VALIDATION LOGIC ADDED ---
+  const validateForm = () => {
+    if (!email || !password) {
+      setError("Both email and password are required.");
+      return false;
+    }
+    if (!isValidEmail(email)) {
+      setError("Please enter a valid email address.");
+      return false;
+    }
+    // You could add password length validation here if desired
+    return true; // Form is valid
+  };
+  // --- END VALIDATION LOGIC ---
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
-    setError("");
-    try {
-      // Simulate API Call - Replace with your actual authentication
-      await new Promise((resolve) => setTimeout(resolve, 1500));
+    setError(""); // Clear previous errors
 
-      // Example success condition
+    // --- CALL VALIDATION ---
+    if (!validateForm()) {
+      return; // Stop if validation fails
+    }
+    // --- END VALIDATION CALL ---
+
+    setLoading(true);
+    try {
+      // Simulate API Call - checking credentials
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+
       if (email === "test@example.com" && password === "password") {
         console.log("Login successful");
-        // localStorage.setItem("token", "dummy_token");
+        login();
         navigate("/"); // Redirect to home on successful login
       } else {
         throw new Error("Invalid email or password.");
@@ -49,11 +77,15 @@ const Login = () => {
 
         {/* Right Panel: Login Form */}
         <div className="login-form-wrapper">
+          {/* Added noValidate */}
           <form className="login-form" onSubmit={handleSubmit} noValidate>
             <h2 className="login-title">Welcome Back</h2>
             <p className="login-description">
               Please enter your credentials to log in.
             </p>
+
+            {/* Display Error (moved above inputs for better visibility) */}
+            {error && <div className="login-error">{error}</div>}
 
             {/* Email Input */}
             <div className="input-group">
@@ -62,10 +94,14 @@ const Login = () => {
               </span>
               <input
                 id="email"
-                type="email"
-                required
+                type="email" // Use type="email"
+                required // Keep required for accessibility
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                // Clear error on change
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                  if (error) setError("");
+                }}
               />
               <label htmlFor="email">Email Address</label>
             </div>
@@ -76,9 +112,13 @@ const Login = () => {
               <input
                 id="password"
                 type="password"
-                required
+                required // Keep required
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                // Clear error on change
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                  if (error) setError("");
+                }}
               />
               <label htmlFor="password">Password</label>
             </div>
@@ -89,15 +129,16 @@ const Login = () => {
               </Link>
             </div>
 
-            {error && <div className="login-error">{error}</div>}
-
             <button type="submit" className="login-btn" disabled={loading}>
               {loading ? <div className="loader"></div> : "Sign In"}
             </button>
 
             <div className="signup-link-container">
               <span>Don't have an account?</span>
-              <Link to="/signup">Sign Up</Link>
+              {/* Ensure this links correctly */}
+              <Link to="/signup" className="signup-link">
+                Sign Up
+              </Link>
             </div>
           </form>
         </div>
