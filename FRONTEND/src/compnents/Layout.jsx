@@ -1,4 +1,4 @@
-import React, { useState } from "react"; // <-- Import useState
+import React, { useState } from "react";
 import { Link, Outlet } from "react-router-dom";
 
 // This component provides the consistent Header and Footer for all pages.
@@ -55,19 +55,31 @@ export const Layout = () => {
             </Link>
           </nav>
 
+          {/* --- THIS IS THE UPDATED SECTION --- */}
           <div className="flex items-center space-x-4">
-            {/* --- THIS IS THE NEW LOGIC --- */}
             {isLoggedIn ? (
-              // If the user IS logged in, show the Profile button
-              <Link
-                to="/profile"
-                className="hidden md:flex items-center gap-2 px-4 py-2 bg-yellow-500 text-black font-semibold rounded hover:bg-yellow-400 transition-colors duration-200"
-              >
-                <span className="material-symbols-outlined">
-                  account_circle
-                </span>
-                Profile
-              </Link>
+              <>
+                {" "}
+                {/* <-- Added Fragment */}
+                {/* --- THIS IS YOUR NEW DASHBOARD LINK --- */}
+                <Link
+                  to="/lawyer/dashboard"
+                  className="hidden md:flex items-center gap-2 px-4 py-2 bg-gray-700 text-white font-semibold rounded hover:bg-gray-600 transition-colors duration-200"
+                >
+                  <span className="material-symbols-outlined">dashboard</span>
+                  Dashboard
+                </Link>
+                {/* --- THIS IS YOUR EXISTING PROFILE BUTTON --- */}
+                <Link
+                  to="/profile"
+                  className="hidden md:flex items-center gap-2 px-4 py-2 bg-yellow-500 text-black font-semibold rounded hover:bg-yellow-400 transition-colors duration-200"
+                >
+                  <span className="material-symbols-outlined">
+                    account_circle
+                  </span>
+                  Profile
+                </Link>
+              </>
             ) : (
               // If the user is NOT logged in, show the Login button
               <Link
@@ -82,6 +94,7 @@ export const Layout = () => {
               {/* ... mobile menu content ... */}
             </details>
           </div>
+          {/* --- END OF UPDATED SECTION --- */}
         </div>
       </header>
 

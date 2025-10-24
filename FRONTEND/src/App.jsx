@@ -8,6 +8,7 @@ import ForgetPassword from "./pages/account/ForgetPassword";
 import { Layout } from "./compnents/Layout";
 import SignUp from "./pages/account/SignUp.jsx";
 import { ProfilePage } from "./pages/account/profile"; // <-- STEP 1: IMPORT THE NEW PAGE
+import { LawyerDashboard } from "./pages/Lawyer/LawyerDashboard";
 
 // This component wraps our main pages with the Layout
 const PageLayout = () => (
@@ -32,6 +33,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/forgot-password" element={<ForgetPassword />} />
         <Route path="signUp" element={<SignUp />} />
+        <Route path="/lawyer/dashboard" element={<LawyerDashboard />} />
       </Routes>
     </BrowserRouter>
   );
