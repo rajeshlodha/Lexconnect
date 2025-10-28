@@ -3,10 +3,7 @@ import { useNavigate, Link } from "react-router-dom";
 import "./Login.css";
 import { useAuth } from "../../context/AuthContext";
 
-// Simple email validation function (can be shared or defined locally)
-const isValidEmail = (email) => {
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-};
+const isValidEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -16,8 +13,8 @@ const Login = () => {
   const navigate = useNavigate();
   const { login } = useAuth();
 
-  // --- VALIDATION LOGIC ADDED ---
   const validateForm = () => {
+    // ... (validation logic remains the same) ...
     if (!email || !password) {
       setError("Both email and password are required.");
       return false;
@@ -26,32 +23,41 @@ const Login = () => {
       setError("Please enter a valid email address.");
       return false;
     }
-    // You could add password length validation here if desired
-    return true; // Form is valid
+    return true;
   };
-  // --- END VALIDATION LOGIC ---
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError(""); // Clear previous errors
-
-    // --- CALL VALIDATION ---
-    if (!validateForm()) {
-      return; // Stop if validation fails
-    }
-    // --- END VALIDATION CALL ---
+    setError("");
+    if (!validateForm()) return;
 
     setLoading(true);
     try {
-      // Simulate API Call - checking credentials
+      // Simulate API Call
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
+      let role = null;
+      let redirectPath = "/"; // Default redirect
+
+      // --- SIMULATED ROLE ASSIGNMENT ---
       if (email === "test@example.com" && password === "password") {
-        console.log("Login successful");
-        login();
-        navigate("/"); // Redirect to home on successful login
+        role = "client";
+        redirectPath = "/profile"; // Clients go to profile
+      } else if (email === "lawyer@example.com" && password === "password") {
+        role = "lawyer";
+        redirectPath = "/lawyer/dashboard"; // Lawyers go to dashboard
       } else {
         throw new Error("Invalid email or password.");
+      }
+      // --- END ROLE ASSIGNMENT ---
+
+      if (role) {
+        login(role); // Pass the role to the login function
+        console.log(`Login successful as ${role}`);
+        navigate(redirectPath); // Redirect based on role
+      } else {
+        // This case should ideally not be reached if validation is correct
+        throw new Error("Login failed internally.");
       }
     } catch (err) {
       setError(err.message || "An error occurred. Please try again.");
@@ -60,9 +66,10 @@ const Login = () => {
   };
 
   return (
+    // ... (Rest of the JSX remains the same, including form inputs, branding, etc.) ...
     <div className="login-page">
       <div className="login-container">
-        {/* Left Panel: Branding */}
+        {/* Branding */}
         <div className="login-branding">
           <div className="branding-content">
             <span className="branding-icon material-symbols-outlined">
@@ -74,19 +81,14 @@ const Login = () => {
             </p>
           </div>
         </div>
-
-        {/* Right Panel: Login Form */}
+        {/* Form */}
         <div className="login-form-wrapper">
-          {/* Added noValidate */}
           <form className="login-form" onSubmit={handleSubmit} noValidate>
             <h2 className="login-title">Welcome Back</h2>
             <p className="login-description">
               Please enter your credentials to log in.
             </p>
-
-            {/* Display Error (moved above inputs for better visibility) */}
             {error && <div className="login-error">{error}</div>}
-
             {/* Email Input */}
             <div className="input-group">
               <span className="input-icon material-symbols-outlined">
@@ -94,10 +96,9 @@ const Login = () => {
               </span>
               <input
                 id="email"
-                type="email" // Use type="email"
-                required // Keep required for accessibility
+                type="email"
+                required
                 value={email}
-                // Clear error on change
                 onChange={(e) => {
                   setEmail(e.target.value);
                   if (error) setError("");
@@ -105,16 +106,14 @@ const Login = () => {
               />
               <label htmlFor="email">Email Address</label>
             </div>
-
             {/* Password Input */}
             <div className="input-group">
               <span className="input-icon material-symbols-outlined">lock</span>
               <input
                 id="password"
                 type="password"
-                required // Keep required
+                required
                 value={password}
-                // Clear error on change
                 onChange={(e) => {
                   setPassword(e.target.value);
                   if (error) setError("");
@@ -122,20 +121,16 @@ const Login = () => {
               />
               <label htmlFor="password">Password</label>
             </div>
-
             <div className="login-options">
               <Link to="/forgot-password" className="forgot-password-link">
                 Forgot Password?
               </Link>
             </div>
-
             <button type="submit" className="login-btn" disabled={loading}>
               {loading ? <div className="loader"></div> : "Sign In"}
             </button>
-
             <div className="signup-link-container">
               <span>Don't have an account?</span>
-              {/* Ensure this links correctly */}
               <Link to="/signup" className="signup-link">
                 Sign Up
               </Link>

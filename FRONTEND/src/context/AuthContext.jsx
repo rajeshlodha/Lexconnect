@@ -1,38 +1,54 @@
-import React, { createContext, useState, useContext } from "react";
+import React, { createContext, useState, useContext, useEffect } from "react";
 
-// 1. Create the context
 const AuthContext = createContext();
 
-// 2. Create a custom hook for easy access
 export const useAuth = () => useContext(AuthContext);
 
-// 3. Create the Provider component
 export const AuthProvider = ({ children }) => {
+  // Initialize state from localStorage
   const [isLoggedIn, setIsLoggedIn] = useState(
     () => localStorage.getItem("isLoggedIn") === "true"
   );
+  const [userRole, setUserRole] = useState(
+    () => localStorage.getItem("userRole") || null
+  );
 
-  const login = () => {
-    localStorage.setItem("isLoggedIn", "true");
-    setIsLoggedIn(true);
+  // Update localStorage when state changes
+  useEffect(() => {
+    if (isLoggedIn) {
+      localStorage.setItem("isLoggedIn", "true");
+      localStorage.setItem("userRole", userRole);
+    } else {
+      localStorage.removeItem("isLoggedIn");
+      localStorage.removeItem("userRole");
+    }
+  }, [isLoggedIn, userRole]);
+
+  // Login now accepts a role
+  const login = (role) => {
+    if (role) {
+      setUserRole(role);
+      setIsLoggedIn(true);
+    } else {
+      // Handle login error - role is required
+      console.error("Login failed: Role not provided.");
+    }
   };
 
   const logout = () => {
-    localStorage.removeItem("isLoggedIn");
     setIsLoggedIn(false);
+    setUserRole(null);
   };
 
-  // --- ADD THIS SIGNUP FUNCTION ---
-  const signup = () => {
-    // In a real app, call your API to create the user here.
-    // For now, we'll just log them in immediately.
-    console.log("Simulating user creation and logging in.");
-    login(); // Call the existing login function
+  // Signup can also set a default role (e.g., 'client')
+  const signup = (role = "client") => {
+    // Default role to client
+    console.log(`Simulating user creation with role: ${role}`);
+    login(role); // Call login with the specified role
   };
-  // --- END OF NEW FUNCTION ---
 
-  // Add signup to the value passed down
-  const value = { isLoggedIn, login, logout, signup }; // <-- ADD signup HERE
+  // Include userRole in the context value
+  const value = { isLoggedIn, userRole, login, logout, signup };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

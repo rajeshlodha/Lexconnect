@@ -23,6 +23,7 @@ import Attorneys from "./pages/HomeFolder/Attorneys";
 import Services from "./pages/HomeFolder/Services";
 import Contact from "./pages/HomeFolder/contact";
 import ProtectedRoute from "./compnents/ProtectedRoute";
+import NotFoundPage from "./pages/NotFoundPage";
 
 // Public Page Layout
 const PageLayout = () => (
@@ -35,7 +36,8 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        {/* --- Public Routes (WITH Layout) --- */}
+        {/* --- Public Routes --- */}
+        {/* ... (no changes here) ... */}
         <Route element={<PageLayout />}>
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
@@ -44,35 +46,45 @@ function App() {
           <Route path="/contact" element={<Contact />} />
         </Route>
 
-        {/* --- Auth Routes (NO Layout) --- */}
+        {/* --- Auth Routes --- */}
+        {/* ... (no changes here) ... */}
         <Route path="/login" element={<Login />} />
         <Route path="/forgot-password" element={<ForgetPassword />} />
         <Route path="signUp" element={<SignUp />} />
 
-        {/* --- Protected Routes (Logged-in users only) --- */}
-        <Route element={<ProtectedRoute />}>
-          {/* User Profile (uses public layout) */}
-          <Route element={<PageLayout />}>
-            <Route path="/profile" element={<ProfilePage />} />
-          </Route>
+        {/* --- Protected Routes --- */}
 
-          {/* Lawyer Dashboard Section (uses LawyerDashboardLayout) */}
-          <Route element={<LawyerDashboardLayout />}>
+        {/* Routes accessible by BOTH Client and Lawyer */}
+        <Route element={<ProtectedRoute allowedRoles={["client", "lawyer"]} />}>
+          {" "}
+          {/* <-- ALLOW BOTH */}
+          <Route element={<PageLayout />}>
             {" "}
-            <Route
-              path="/Lawyer/dashboard"
-              element={<DashboardContent />}
-            />{" "}
-            {/* <-- NEW: Main dashboard content */}
-            <Route path="/Lawyer/cases" element={<CasesPage />} />
-            <Route path="/Lawyer/appointments" element={<AppointmentsPage />} />
-            <Route path="/Lawyer/documents" element={<DocumentsPage />} />
-            <Route path="/Lawyer/messages" element={<MessagesPage />} />
-            <Route path="/Lawyer/Billing" element={<BillingPage />} />
-            <Route path="/lawyer/settings" element={<SettingsPage />} />
-            {/* Add routes for Appointments, Documents etc. here later */}
+            {/* Use main layout */}
+            <Route path="/profile" element={<ProfilePage />} />{" "}
+            {/* <-- Profile is here */}
+            {/* Add any other routes accessible by both roles */}
           </Route>
         </Route>
+
+        {/* Lawyer-ONLY Routes */}
+        <Route element={<ProtectedRoute allowedRoles={["lawyer"]} />}>
+          <Route element={<LawyerDashboardLayout />}>
+            {" "}
+            {/* Use dashboard layout */}
+            <Route path="/lawyer/dashboard" element={<DashboardContent />} />
+            <Route path="/lawyer/cases" element={<CasesPage />} />
+            <Route path="/lawyer/appointments" element={<AppointmentsPage />} />
+            <Route path="/lawyer/documents" element={<DocumentsPage />} />
+            <Route path="/lawyer/messages" element={<MessagesPage />} />
+            <Route path="/lawyer/billing" element={<BillingPage />} />
+            <Route path="/lawyer/settings" element={<SettingsPage />} />
+            <Route path="*" element={<NotFoundPage />} />
+          </Route>
+        </Route>
+
+        {/* --- Catch-All 404 Route --- */}
+        {/* ... */}
       </Routes>
     </BrowserRouter>
   );

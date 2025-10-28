@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useState, useEffect } from "react"; // Import hooks
 import { Link } from "react-router-dom";
 
-// Sample data for documents
-const sampleDocuments = [
+// Sample data (used in simulated fetch)
+const sampleDocumentsData = [
+  // ... (Keep the same sampleDocuments array data) ...
   {
     id: "D001",
     name: "Thompson_Case_Brief.pdf",
@@ -61,6 +62,34 @@ const sampleDocuments = [
 ];
 
 const DocumentsPage = () => {
+  // --- STATE ---
+  const [documents, setDocuments] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+  // --- END STATE ---
+
+  // --- EFFECT ---
+  useEffect(() => {
+    setIsLoading(true);
+    setError(null);
+
+    const fetchDocuments = async () => {
+      try {
+        await new Promise((resolve) => setTimeout(resolve, 1000)); // Simulate 1 sec delay
+        // Simulate error
+        // if (Math.random() > 0.8) { throw new Error("Could not load documents."); }
+        setDocuments(sampleDocumentsData);
+      } catch (err) {
+        setError(err.message);
+        setDocuments([]);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchDocuments();
+  }, []);
+  // --- END EFFECT ---
+
   return (
     <div>
       <div className="flex justify-between items-center mb-6">
@@ -71,8 +100,8 @@ const DocumentsPage = () => {
       </div>
 
       {/* Documents Table */}
-      <div className="bg-neutral-800 rounded-xl shadow-lg overflow-hidden">
-        <table className="w-full text-left text-gray-400">
+      <div className="bg-neutral-800 rounded-xl shadow-lg overflow-x-auto">
+        <table className="w-full text-left text-sm text-gray-400">
           <thead className="bg-neutral-700 text-xs text-gray-300 uppercase tracking-wider">
             <tr>
               <th scope="col" className="px-6 py-3">
@@ -90,53 +119,91 @@ const DocumentsPage = () => {
               <th scope="col" className="px-6 py-3">
                 Last Accessed
               </th>
-              <th scope="col" className="px-6 py-3">
-                <span className="sr-only">Actions</span>
+              <th scope="col" className="px-6 py-3 text-right">
+                Actions
               </th>
             </tr>
           </thead>
           <tbody>
-            {sampleDocuments.map((doc) => (
-              <tr
-                key={doc.id}
-                className="border-b border-neutral-700 hover:bg-neutral-700/50 transition-colors duration-150"
-              >
-                <th
-                  scope="row"
-                  className="px-6 py-4 font-medium text-gray-300 whitespace-nowrap flex items-center gap-3"
+            {/* --- CONDITIONAL RENDERING --- */}
+            {isLoading ? (
+              <tr>
+                <td
+                  colSpan="6"
+                  className="px-6 py-10 text-center text-gray-500"
                 >
-                  <i
-                    className={`fa-solid ${doc.icon} ${doc.iconColor} text-lg`}
-                  ></i>
-                  {doc.name}
-                </th>
-                <td className="px-6 py-4">{doc.caseId}</td>
-                <td className="px-6 py-4">{doc.client}</td>
-                <td className="px-6 py-4">{doc.uploaded}</td>
-                <td className="px-6 py-4">{doc.lastAccessed}</td>
-                <td className="px-6 py-4 text-right">
-                  {/* Example actions */}
-                  <a
-                    href="#"
-                    className="font-medium text-yellow-500 hover:text-yellow-600 mr-3"
-                  >
-                    View
-                  </a>
-                  <a
-                    href="#"
-                    className="font-medium text-blue-500 hover:text-blue-600 mr-3"
-                  >
-                    Download
-                  </a>
-                  <a
-                    href="#"
-                    className="font-medium text-red-500 hover:text-red-600"
-                  >
-                    Delete
-                  </a>
+                  <i className="fa-solid fa-spinner fa-spin mr-2"></i> Loading
+                  documents...
                 </td>
               </tr>
-            ))}
+            ) : error ? (
+              <tr>
+                <td colSpan="6" className="px-6 py-10 text-center text-red-500">
+                  <i className="fa-solid fa-exclamation-triangle mr-2"></i>{" "}
+                  Error: {error}
+                </td>
+              </tr>
+            ) : documents.length > 0 ? (
+              documents.map((doc) => (
+                <tr
+                  key={doc.id}
+                  className="border-b border-neutral-700 hover:bg-neutral-700/50 transition-colors duration-150 align-top"
+                >
+                  <th
+                    scope="row"
+                    className="px-6 py-4 font-medium text-gray-300 whitespace-nowrap flex items-center gap-3"
+                  >
+                    <i
+                      className={`fa-solid ${doc.icon} ${doc.iconColor} text-lg w-4 text-center`}
+                    ></i>{" "}
+                    {/* Ensure icon width */}
+                    {doc.name}
+                  </th>
+                  <td className="px-6 py-4">{doc.caseId}</td>
+                  <td className="px-6 py-4">{doc.client}</td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    {doc.uploaded}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    {doc.lastAccessed}
+                  </td>
+                  <td className="px-6 py-4 text-right whitespace-nowrap">
+                    <a
+                      href="#"
+                      className="font-medium text-yellow-500 hover:text-yellow-600 mr-4"
+                    >
+                      {" "}
+                      <i className="fa-solid fa-eye"></i> View{" "}
+                    </a>
+                    <a
+                      href="#"
+                      className="font-medium text-blue-500 hover:text-blue-600 mr-4"
+                    >
+                      {" "}
+                      <i className="fa-solid fa-download"></i> Download{" "}
+                    </a>
+                    <a
+                      href="#"
+                      className="font-medium text-red-500 hover:text-red-600"
+                    >
+                      {" "}
+                      <i className="fa-solid fa-trash"></i> Delete{" "}
+                    </a>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td
+                  colSpan="6"
+                  className="px-6 py-10 text-center text-gray-500"
+                >
+                  <i className="fa-solid fa-file-circle-xmark mr-2"></i> No
+                  documents found.
+                </td>
+              </tr>
+            )}
+            {/* --- END CONDITIONAL RENDERING --- */}
           </tbody>
         </table>
       </div>
