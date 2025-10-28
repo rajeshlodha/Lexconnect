@@ -1,3 +1,11 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Your :root definitions MUST come AFTER the @tailwind directives
+   if you want Tailwind's base styles to use your variables correctly.
+   However, putting them BEFORE lets Tailwind config use them. Let's try BEFORE.
+*/
 /* Define color variables for the default (light) theme */
 :root {
   --primary-bg: #f4f7f9;
@@ -38,7 +46,9 @@ body {
   background-color: var(--primary-bg); /* Use variable */
   color: var(--text-color); /* Use variable */
   line-height: 1.6;
-  transition: background-color 0.3s, color 0.3s;
+  transition:
+    background-color 0.3s,
+    color 0.3s;
 }
 
 a {
